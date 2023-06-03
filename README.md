@@ -1,6 +1,4 @@
-====================================
-         MySurvey Application
-====================================
+Backend App - Mysurvey
 
 MySurvey is a web-based application that allows users to create and participate in online surveys. It provides an easy-to-use interface for creating surveys with various question types and collecting responses from participants.
 
