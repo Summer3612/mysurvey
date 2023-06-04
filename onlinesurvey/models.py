@@ -1,26 +1,36 @@
 
 from django.db import models
-
+import uuid
 
 class Survey(models.Model):
-    title = models.CharField(max_length=255,blank=True)
-    description = models.CharField(max_length=255,blank=True)
+    PERMISSION_CHOICES = [
+        ('public', 'Public'),
+        ('private', 'Private'),
+    ]
+    # blank = False to make the title mandatory and True means it is optional
+    title = models.CharField(max_length=255, blank=False)
+    description = models.CharField(max_length=255, blank=True)
+    permissions = models.CharField(max_length=10, choices=PERMISSION_CHOICES, default='public')
+    access_token = models.CharField(max_length=50, blank=True, null=True, unique=True)
 
+    def save(self, *args, **kwargs):
+        if self.permissions == 'private' and not self.access_token:
+            self.access_token = uuid.uuid4()
+
+        super().save(*args, **kwargs)
+        return self.access_token
+    
     def __str__(self):
-      return f'{self.title}'
+        return f'{self.title}'
 
 class Question(models.Model):
     SHORT_TEXT = 'ST'
     LONG_TEXT = 'LT'
     DROPDOWN = 'DD'
-    # MULTIPLE_CHOICE = 'MC'
     SINGLE_ANSWER = 'SA'
-    # MULTIPLE_ANSWERS = 'MA'
     CHECKBOXES = 'CB'
-    # LINEAR_SCALE = 'LS'
     DATE = 'DT'
     TIME = 'TM'
-    # MULTIPLE_CHOICE_GRID = 'MCG'
     EMAIL = 'EM'
     NUMERIC = 'NM'
   
@@ -28,21 +38,17 @@ class Question(models.Model):
           (SHORT_TEXT, 'Short question (max size 255 characters)'),
           (LONG_TEXT, 'Paragraphs (max size 10,000 characters)'),
           (DROPDOWN, 'Dropdown'),
-          # (MULTIPLE_CHOICE, 'Multiple Choice'),
           (SINGLE_ANSWER, 'Single correct answer'),
-          # (MULTIPLE_ANSWERS, 'Multiple correct answers'),
           (CHECKBOXES, 'Checkboxes'),
-          # (LINEAR_SCALE, 'Linear scale'),
           (DATE, 'Date'),
           (TIME, 'Time'),
-          # (MULTIPLE_CHOICE_GRID, 'Multiple choice grid'),
           (EMAIL, 'Email'),
           (NUMERIC, 'Numeric values'),
       ]
     survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE)
     text = models.CharField(blank=True, max_length=200)
-    description = models.CharField(max_length=200, blank=True)
-    widget_type = models.CharField(max_length=3, choices=WIDGET_TYPES, default='RS')
+    description = models.CharField(max_length=255, blank=True)
+    widget_type = models.CharField(max_length=3, choices=WIDGET_TYPES)
     
     def __str__(self):
       return self.text
@@ -58,7 +64,7 @@ class Submission(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
 
     def __str__(self):
-      return f"Submission for survey:{self.survey}"
+      return f"Submission {self.id} for {self.survey}"
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
@@ -73,6 +79,6 @@ class Answer(models.Model):
     integer_answer = models.IntegerField(blank=True, null=True)
     
     def __str__(self):
-        return f"Answer for question {self.question} of {self.submission}"
+        return f"Answer for {self.question} of {self.submission}"
 
  

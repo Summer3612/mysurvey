@@ -20,5 +20,6 @@ from onlinesurvey.views import show_survey
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("survey/<id>/", show_survey, name="show-survey"),
+    path('survey/<int:id>/', show_survey, name='show-public-survey'),
+    path("survey/<id>/<access_token>/", show_survey, name="show-private-survey"),
 ]

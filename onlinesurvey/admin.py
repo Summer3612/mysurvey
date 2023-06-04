@@ -33,7 +33,6 @@ class SubmissionAdmin(admin.ModelAdmin):
     AnswerInline
   ]
   
-
 admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Submission,SubmissionAdmin)
