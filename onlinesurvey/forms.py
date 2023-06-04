@@ -1,12 +1,17 @@
 from django import forms
 from .models import Submission, Choice
 
+'''
+The forms module provides a way to define and handle HTML forms in a web application. 
+Forms captures user input, validates it, and processes it on the server side. 
+The forms module in Django offers a set of powerful features to simplify form handling and data validation.
+'''
+
 class SurveyForm(forms.Form):
-  
     def __init__(self, survey, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.survey = survey
-  
+
         for question in survey.question_set.all():
               choices = [(choice.id, choice.text) for choice in question.choice_set.all()]
               field_mapping = {

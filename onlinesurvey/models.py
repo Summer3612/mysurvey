@@ -1,7 +1,18 @@
+'''
+When you define models in Django, they are translated into database tables. 
+Migrations help you keep track of any changes you make to your models and provide a way to apply those changes to the database. 
+Migrations are essentially Python files that describe the changes you want to make to the database schema.
+'''
 
 from django.db import models
 import uuid
 
+'''
+The models module facilitates the creation and manipulation of database models by providing a set of classes and functions that. 
+The models module is a core component of Django's Object-Relational Mapping (ORM) system.
+Advantage: It abstracts the database interactions and allows you to work with databases using Python code.
+
+'''
 class Survey(models.Model):
     PERMISSION_CHOICES = [
         ('public', 'Public'),
@@ -51,7 +62,7 @@ class Question(models.Model):
     widget_type = models.CharField(max_length=3, choices=WIDGET_TYPES)
     
     def __str__(self):
-      return self.text
+      return f" Question: {self.text} -> {self.survey}"
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, null=True, on_delete=models.CASCADE)
@@ -64,7 +75,7 @@ class Submission(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
 
     def __str__(self):
-      return f"Submission {self.id} for {self.survey}"
+      return f"Submission {self.id} -> {self.survey}"
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
@@ -79,6 +90,4 @@ class Answer(models.Model):
     integer_answer = models.IntegerField(blank=True, null=True)
     
     def __str__(self):
-        return f"Answer for {self.question} of {self.submission}"
-
- 
+        return f"Answer for {self.question} | {self.submission}"

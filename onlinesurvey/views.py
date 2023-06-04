@@ -6,6 +6,12 @@ from django.contrib import messages
 from .models import Survey
 from .forms import SurveyForm
 
+'''
+The views module handles HTTP requests and generates HTTP responses. 
+Views are responsible for processing requests and returning appropriate responses. 
+They encapsulate the logic for handling different URLs and determining the content to be displayed or actions to be performed.
+
+'''
 
 def show_survey(request, id=None, access_token=None):
     survey = get_object_or_404(Survey, pk=id) # Get Survey object with the provided id. If the survey with the given id does not exist, it raises a 404 error.

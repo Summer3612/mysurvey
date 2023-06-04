@@ -14,6 +14,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+'''
+When a user makes a request to a specific URL, Django's URL resolver takes the requested URL and tries to match it against the defined URL patterns in the urlpatterns. Once a match is found, Django calls the associated view function, passing the request and any captured URL parameters as arguments.
+'''
 from django.contrib import admin
 from django.urls import path
 from onlinesurvey.views import show_survey
@@ -21,5 +25,5 @@ from onlinesurvey.views import show_survey
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('survey/<int:id>/', show_survey, name='show-public-survey'),
-    path("survey/<id>/<access_token>/", show_survey, name="show-private-survey"),
+    path("survey/<int:id>/<access_token>/", show_survey, name="show-private-survey"),
 ]
