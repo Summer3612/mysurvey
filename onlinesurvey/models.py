@@ -46,7 +46,7 @@ class Question(models.Model):
           (NUMERIC, 'Numeric values'),
       ]
     survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE)
-    text = models.CharField(blank=True, max_length=200)
+    text = models.CharField(blank=False, max_length=255)
     description = models.CharField(max_length=255, blank=True)
     widget_type = models.CharField(max_length=3, choices=WIDGET_TYPES)
     
@@ -55,7 +55,7 @@ class Question(models.Model):
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, null=True, on_delete=models.CASCADE)
-    text = models.CharField(max_length=255)
+    text = models.CharField(max_length=255,blank=True)
 
     def __str__(self):
       return f"{self.question.text}:{self.text}"

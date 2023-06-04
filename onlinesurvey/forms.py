@@ -20,15 +20,13 @@ class SurveyForm(forms.Form):
               'EM': forms.EmailField(),
               'NM': forms.IntegerField(),  # Or forms.DecimalField if you need to support decimal numbers
           }
-
-              # Get the correct form field for this question type
-              field_class = field_mapping.get(question.widget_type)
+              field_class = field_mapping.get(question.widget_type)# Get the correct form field for this question type
               # Create the form field
               self.fields[f"question_{question.id}"] = field_class
               self.fields[f"question_{question.id}"].label = question.text
         
     def save(self):
-        data = self.cleaned_data
+        data = self.cleaned_data  # This step is essential to prevent potential issues like code injection or unexpected behavior when saving the form data to the database.
         submission = Submission(survey=self.survey)
         submission.save()
 
