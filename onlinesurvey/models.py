@@ -18,7 +18,7 @@ class Survey(models.Model):
         ('public', 'Public'),
         ('private', 'Private'),
     ]
-    # blank = False to make the title mandatory and True means it is optional
+    # requirements: blank = False to make the title mandatory and True means it is optional
     title = models.CharField(max_length=255, blank=False)
     description = models.CharField(max_length=255, blank=True)
     permissions = models.CharField(max_length=10, choices=PERMISSION_CHOICES, default='public')
@@ -27,14 +27,17 @@ class Survey(models.Model):
     def save(self, *args, **kwargs):
         if self.permissions == 'private' and not self.access_token:
             self.access_token = uuid.uuid4()
-
-        super().save(*args, **kwargs)
+        super().save(*args, **kwargs)   # It calls the save() method of the parent class to perform the actual saving of the object to the database.
         return self.access_token
     
+    # The __str__() method in Django models is used to define a human-readable string representation of an object. 
+    # It is a built-in Python method that gets called when you try to convert an object to a string
+    # especially important when you print the object or display it in the Django admin interface.
     def __str__(self):
         return f'{self.title}'
 
 class Question(models.Model):
+    # capitalised as the value should be constant
     SHORT_TEXT = 'ST'
     LONG_TEXT = 'LT'
     DROPDOWN = 'DD'
@@ -56,7 +59,10 @@ class Question(models.Model):
           (EMAIL, 'Email'),
           (NUMERIC, 'Numeric values'),
       ]
+    
     survey = models.ForeignKey(Survey, null=True, on_delete=models.CASCADE)
+    
+    # 5.	Each question has following 3 sections:
     text = models.CharField(blank=False, max_length=255)
     description = models.CharField(max_length=255, blank=True)
     widget_type = models.CharField(max_length=3, choices=WIDGET_TYPES)
