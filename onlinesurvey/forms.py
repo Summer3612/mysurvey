@@ -2,8 +2,9 @@ from django import forms
 from .models import Submission, Choice
 
 '''
-The forms module provides a way to define and handle HTML forms in a web application. 
-Forms captures user input, validates it, and processes it on the server side. 
+The forms module provides a way to define and handle HTML forms in a web application,i.e. used to automatically generate HTML for elements from classes.
+In Django, the most common form submission is a post request, which will send the data down in the post body.
+The server-side code captures user input, validates it, and processes it on the server side. 
 The forms module in Django offers a set of powerful features to simplify form handling and data validation.
 '''
 
@@ -45,7 +46,9 @@ class SurveyForm(forms.Form):
                 elif question.widget_type in ['DD','SA']:
                         choice = Choice.objects.get(pk=answer_data)
                         submission.answers.create(choice_answer=choice, question=question)
-                elif question.widget_type in ['ST', 'LT']:
+                elif question.widget_type == 'ST':
+                    submission.answers.create(short_answer=answer_data, question=question)
+                elif question.widget_type == 'LT':
                     submission.answers.create(text_answer=answer_data, question=question)
                 elif question.widget_type == 'DT':
                     submission.answers.create(date_answer=answer_data, question=question)
